@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout
+    android:id="@+id/duoDrawerLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@drawable/covid_navigation_background"
+    app:menu="@menu/nav_drawer_menu"
+    app:menuAlphaOpen="0.8"
+    app:menuAlphaClosed="0"
+    android:layout_height="match_parent">
+
+    <nl.psdcompany.duonavigationdrawer.views.DuoMenuView
+        android:id="@+id/duoMenuView"
+        android:tag="@string/tag_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:marginFactor="1.0"
+        app:contentScaleClosed="1.0"
+        app:contentScaleOpen="0.5"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="@string/tag_content"
+        android:background="@color/grey_5">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:elevation="0dp"
+        android:elevation="0dp"
+        android:background="@color/grey_5">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:elevation="0dp"
+            android:visibility="gone"
+            android:layout_height="?attr/actionBarSize"/>
+
+
+        <ImageView
+            android:layout_width="@dimen/spacing_xlarge"
+            android:layout_height="@dimen/spacing_xlarge"
+            android:src="@drawable/hamburger_menu_icon"
+            android:id="@+id/navDrawerIcon"
+            android:tint="@color/grey_900"
+            android:clickable="true"
+            android:soundEffectsEnabled="true"
+            android:focusable="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginStart="@dimen/spacing_mlarge"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/dashboardFragment"
+            android:layout_width="@dimen/zero_dimen"
+            android:layout_height="@dimen/zero_dimen"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout>

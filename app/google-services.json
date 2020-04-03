@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "332731212635",
+    "firebase_url": "https://hackcovid-19.firebaseio.com",
+    "project_id": "hackcovid-19",
+    "storage_bucket": "hackcovid-19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332731212635:android:d4de0ca914ac9975f3307e",
+        "android_client_info": {
+          "package_name": "project.dheeraj.hackcovid_19"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "332731212635-to1m5aaj90v32v1udtl5a9huun68776c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "project.dheeraj.hackcovid_19",
+            "certificate_hash": "b9b6edabaaed4d1e6677759f5243447991a42d97"
+          }
+        },
+        {
+          "client_id": "332731212635-ffojkqbk2njorgbp0lil85o306psadcr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEG_8kuSlu71hbhJ0Ze0PnuVFbUtYSW3s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "332731212635-ffojkqbk2njorgbp0lil85o306psadcr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/dashboard"
+        android:title="Dashboard"/>
+
+    <item android:id="@+id/symptoms"
+        android:title="Symptoms"/>
+
+    <item android:id="@+id/my_playlist"
+        android:title="Sponsors"/>
+
+    <item android:id="@+id/subscription"
+        android:title="Team"/>
+
+    <item android:id="@+id/about"
+        android:title="About"/>
+
+</menu>
