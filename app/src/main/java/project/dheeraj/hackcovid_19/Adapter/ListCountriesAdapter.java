@@ -1,7 +1,6 @@
-package project.dheeraj.hackcovid_19;
+package project.dheeraj.hackcovid_19.Adapter;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,16 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import project.dheeraj.hackcovid_19.Model.CountryModel;
+import project.dheeraj.hackcovid_19.R;
+
 public class ListCountriesAdapter extends BaseAdapter {
 
     Activity context;
-    ArrayList<CountryLine> allCountriesResults;
+    ArrayList<CountryModel> allCountriesResults;
     LayoutInflater inflater;
 
-    public ListCountriesAdapter(Activity context, ArrayList<CountryLine> allCountriesResults) {
+    public ListCountriesAdapter(Activity context, ArrayList<CountryModel> allCountriesResults) {
         super();
         this.context = context;
         this.allCountriesResults = allCountriesResults;
@@ -54,7 +56,7 @@ public class ListCountriesAdapter extends BaseAdapter {
 
         if (convertView == null)
         {
-            convertView = inflater.inflate(R.layout.countries_list_adapter, null);
+            convertView = inflater.inflate(R.layout.item_county, null);
             holder = new ViewHolder();
 
             holder.colCountryName = (TextView) convertView.findViewById(R.id.colCountryName);

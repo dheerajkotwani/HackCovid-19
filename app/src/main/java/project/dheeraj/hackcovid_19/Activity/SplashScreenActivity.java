@@ -1,18 +1,14 @@
-package project.dheeraj.hackcovid_19;
+package project.dheeraj.hackcovid_19.Activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
+import project.dheeraj.hackcovid_19.MainActivity;
+import project.dheeraj.hackcovid_19.R;
 import project.dheeraj.hackcovid_19.Util.UtilMethod;
 
 public class SplashScreenActivity extends AppCompatActivity {

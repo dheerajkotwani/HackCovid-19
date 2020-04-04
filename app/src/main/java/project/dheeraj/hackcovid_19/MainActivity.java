@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.location.Location;
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 import nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout;
@@ -44,9 +46,12 @@ import project.dheeraj.hackcovid_19.Fragment.FragmentCountryView;
 import project.dheeraj.hackcovid_19.Fragment.HelplineFragment;
 import project.dheeraj.hackcovid_19.Fragment.IndiaFragment;
 import project.dheeraj.hackcovid_19.Fragment.MapFragment;
+import project.dheeraj.hackcovid_19.Fragment.NearbyFragment;
 import project.dheeraj.hackcovid_19.Fragment.ReportFragment;
 import project.dheeraj.hackcovid_19.Fragment.SymptomsFragment;
 import project.dheeraj.hackcovid_19.Fragment.facilitiesfragment;
+import project.dheeraj.hackcovid_19.Model.StateData;
+import project.dheeraj.hackcovid_19.Model.StateViewModel;
 import project.dheeraj.hackcovid_19.R;
 import project.dheeraj.hackcovid_19.Util.UtilMethod;
 
@@ -58,6 +63,7 @@ import static java.lang.StrictMath.sin;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, DuoMenuView.OnMenuClickListener {
 
+    private ArrayList<StateData> stateDatalist = new ArrayList<>();
 
     private final float DEFAULT_ZOOM = 18f;
     private GoogleMap mMap;
@@ -73,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DuoDrawerLayout drawerLayout;
     private DuoDrawerToggle drawerToggle;
     private Fragment fragmentDashboard, fragmentCountryView, fragmentMap, fragmentSymptoms;
-    private Fragment fragmentIndia, fragmentHelpline, fragmentAbout, fragmentFacilities;
+    private Fragment fragmentIndia, fragmentHelpline, fragmentAbout, fragmentFacilities, fragmentNearby;
     private FragmentManager fragmentManager;
     private DuoAdapter duoMenuAdapter;
 //    private View fragment;
@@ -104,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentSymptoms = new SymptomsFragment();
         fragmentHelpline = new HelplineFragment();
         fragmentFacilities = new facilitiesfragment();
+        fragmentNearby = new NearbyFragment();
         fragmentMap = new MapFragment();
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentDashboard).commit();
@@ -114,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         menuOptions.add("India");
         menuOptions.add("Map");
         menuOptions.add("Symptoms");
+        menuOptions.add("Nearby");
         menuOptions.add("Facilities");
         menuOptions.add("Report");
         menuOptions.add("Helpline");
@@ -144,10 +152,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
-    private double rad(double x) {
-        return x * Math.PI / 180;
-    };
 
 
     private void checkData(LatLng coordinates){
@@ -185,16 +189,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 double c = 2 * asin(sqrt(a));
                                 double d = rad * c;
                                 Log.d("Distance: ", String.valueOf(d));
-                                if ((d)<=10){
+                                if ((d)<=5){
                                     present = true;
                                     count++;
                                 }
                             }
                             if (present){
-                                Toast.makeText(MainActivity.this, count+" people found infected in your area", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, count+" people found infected in your area", Toast.LENGTH_LONG).show();
                             }
                             else {
-                                Toast.makeText(MainActivity.this, "You are in safe area", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "You are in safe area", Toast.LENGTH_LONG).show();
                             }
                         }
                         else {
@@ -249,29 +253,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentMap).commit();
                 duoMenuAdapter.setViewSelected(position, true);
                 drawerLayout.closeDrawer();
+                break;
             case 4:
                 fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentSymptoms).commit();
                 duoMenuAdapter.setViewSelected(position, true);
                 drawerLayout.closeDrawer();
                 break;
             case 5:
-                fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentFacilities).commit();
+                fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentNearby).commit();
                 duoMenuAdapter.setViewSelected(position, true);
                 drawerLayout.closeDrawer();
                 break;
             case 6:
-//                fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentReport).commit();
-                startActivity(new Intent(MainActivity.this, ReportPatientActivity.class));
+                fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentFacilities).commit();
                 duoMenuAdapter.setViewSelected(position, true);
                 drawerLayout.closeDrawer();
                 break;
             case 7:
+//               fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentReport).commit();
+                startActivity(new Intent(MainActivity.this, ReportPatientActivity.class));
+                duoMenuAdapter.setViewSelected(position, true);
+                drawerLayout.closeDrawer();
+                break;
+            case 8:
                 fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentHelpline).commit();
 //                startActivity(new Intent(MainActivity.this, HelplineFragment.class));
                 duoMenuAdapter.setViewSelected(position, true);
                 drawerLayout.closeDrawer();
                 break;
-            case 8:
+            case 9:
                 fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentAbout).commit();
 //            startActivity(new Intent(MainActivity.this, AboutFragment.class));
             duoMenuAdapter.setViewSelected(position, true);
@@ -303,4 +313,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }, 2000);
     }
+
+
 }

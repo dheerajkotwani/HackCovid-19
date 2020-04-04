@@ -3,4 +3,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="prediction"><u>Predicted Infection rate</u></string>
+    <string name="the_helpline_number_for_corona_virus_91_11_23978046_toll_free_no_1075">The Helpline Number for corona–virus : +91–11–23978046 Toll Free No: 1075</string>
+    <string name="about">About</string>
+
 </resources>

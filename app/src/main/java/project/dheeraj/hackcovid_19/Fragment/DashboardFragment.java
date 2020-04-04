@@ -2,11 +2,16 @@ package project.dheeraj.hackcovid_19.Fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
@@ -22,12 +27,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -41,15 +54,22 @@ import org.jsoup.select.Elements;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-import project.dheeraj.hackcovid_19.CountryLine;
-import project.dheeraj.hackcovid_19.ListCountriesAdapter;
+import project.dheeraj.hackcovid_19.Model.CountryModel;
+import project.dheeraj.hackcovid_19.Adapter.ListCountriesAdapter;
+import project.dheeraj.hackcovid_19.Model.StateData;
+import project.dheeraj.hackcovid_19.Model.StateViewModel;
 import project.dheeraj.hackcovid_19.R;
+import project.dheeraj.hackcovid_19.Util.UtilMethod;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener{
 
     // start
+    private ArrayList<StateData> stateDatalist = new ArrayList<>();
+    private LatLng coordinates;
 
     TextView textViewCases, textViewRecovered, textViewDeaths, textViewDate, textViewDeathsTitle,
             textViewRecoveredTitle, textViewActive, textViewActiveTitle, textViewNewDeaths,
@@ -70,14 +90,17 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
     DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
     ListView listViewCountries;
     ListCountriesAdapter listCountriesAdapter;
-    ArrayList<CountryLine> allCountriesResults, FilteredArrList;
+    ArrayList<CountryModel> allCountriesResults, FilteredArrList;
     Intent sharingIntent;
     int colNumCountry, colNumCases, colNumRecovered, colNumDeaths, colNumActive, colNumNewCases, colNumNewDeaths;
     SwipeRefreshLayout mySwipeRefreshLayout;
     InputMethodManager inputMethodManager;
     Iterator<Element> rowIterator;
     ProgressBar countryProgressBar;
+    FrameLayout dashProgress;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
     private View view;
+    private String state;
 
     // end
 
@@ -115,6 +138,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
         progressRecovered = view.findViewById(R.id.progressRecoveredCases);
         buttonGlobal = view.findViewById(R.id.buttonGlobal);
         cardDashBoardMap = view.findViewById(R.id.cardDashboardMap);
+        dashProgress = view.findViewById(R.id.dashProgress);
         buttonGlobal.setOnClickListener(this);
         cardDashBoardMap.setOnClickListener(this);
 
@@ -150,8 +174,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
         myCalender = Calendar.getInstance();
         handler = new Handler() ;
         generalDecimalFormat = new DecimalFormat("0.00", symbols);
-        allCountriesResults = new ArrayList<CountryLine>();
+        allCountriesResults = new ArrayList<CountryModel>();
 
+        getByState();
 
         // Implement Swipe to Refresh
         mySwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.coronaMainSwipeRefresh);
@@ -168,34 +193,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                 }
         );
 
-        // fix interference between scrolling in listView & parent SwipeRefreshLayout
-        listViewCountries.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        if (!listIsAtTop()) mySwipeRefreshLayout.setEnabled(false);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        mySwipeRefreshLayout.setEnabled(true);
-                        break;
-                }
-
-                // Handle ListView touch events.
-                v.onTouchEvent(event);
-                return true;
-            }
-            private boolean listIsAtTop()   {
-                if(listViewCountries.getChildCount() == 0) return true;
-                return listViewCountries.getChildAt(0).getTop() == 0;
-            }
-        });
-
-
         // fetch previously saved data in SharedPreferences, if any
         if(preferences.getString("textViewCases", null) != null ){
             textViewCases.setText(preferences.getString("textViewCases", null));
@@ -207,15 +204,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
             textTotalCases.setText(preferences.getString("textViewCases", null));
             textDeaths.setText(preferences.getString("textViewDeaths", null));
             textRecovered.setText(preferences.getString("textViewRecovered", null));
-            //calculate_percentages();
         }
 
-        // Add Text Change Listener to textSearchBox to filter by Country
         textSearchBox.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence searchSequence, int start, int before, int count) {
-                FilteredArrList = new ArrayList<CountryLine>();
+                FilteredArrList = new ArrayList<CountryModel>();
                 if (searchSequence == null || searchSequence.length() == 0) {
                     // back to original
                     setListViewCountries(allCountriesResults);
@@ -224,7 +219,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                     for (int i = 0; i < allCountriesResults.size(); i++) {
                         String data = allCountriesResults.get(i).countryName;
                         if (data.toLowerCase().startsWith(searchSequence.toString())) {
-                            FilteredArrList.add(new CountryLine(
+                            FilteredArrList.add(new CountryModel(
                                     allCountriesResults.get(i).countryName,
                                     allCountriesResults.get(i).cases,
                                     allCountriesResults.get(i).newCases,
@@ -273,7 +268,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
 
     }
 
-    private void getIndia(ArrayList<CountryLine> allCountriesResults) {
+    private void getIndia(ArrayList<CountryModel> allCountriesResults) {
         for (int i = 0; i < allCountriesResults.size(); i++) {
             String data = allCountriesResults.get(i).countryName;
             if (data.toLowerCase().equals("india")) {
@@ -282,12 +277,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                 editor.putString("india_newCases",allCountriesResults.get(i).newCases);
                 editor.putString("india_death",allCountriesResults.get(i).deaths);
                 editor.putString("india_newDeath",allCountriesResults.get(i).newDeaths);
-                Toast.makeText(getContext(), "Data for India", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Data for India", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    void setListViewCountries(ArrayList<CountryLine> allCountriesResults) {
+    void setListViewCountries(ArrayList<CountryModel> allCountriesResults) {
         Collections.sort(allCountriesResults);
         listCountriesAdapter = new ListCountriesAdapter(getActivity(), allCountriesResults);
         listViewCountries.setAdapter(listCountriesAdapter);
@@ -334,9 +329,11 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
 
                         @Override
                         public void run() {
+
                             // get countries
+                            dashProgress.setVisibility(View.GONE);
                             rowIterator = countriesRows.iterator();
-                            allCountriesResults = new ArrayList<CountryLine>();
+                            allCountriesResults = new ArrayList<CountryModel>();
 
                             // read table header and find correct column number for each category
                             row = rowIterator.next();
@@ -409,7 +406,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                                 if (cols.get(colNumNewDeaths).hasText()) {tmpNewDeaths = cols.get(colNumNewDeaths).text();}
                                 else {tmpNewDeaths = "0";}
 
-                                allCountriesResults.add(new CountryLine(tmpCountry, tmpCases, tmpNewCases, tmpRecovered, tmpDeaths, tmpNewDeaths));
+                                allCountriesResults.add(new CountryModel(tmpCountry, tmpCases, tmpNewCases, tmpRecovered, tmpDeaths, tmpNewDeaths));
                             }
 
                             setListViewCountries(allCountriesResults);
@@ -464,5 +461,62 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                 fragmentManager.beginTransaction().replace(R.id.dashboardFragment, fragmentMap).commit();
                 break;
         }
+    }
+
+    private void getByState(){
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        StateViewModel stateViewModel = ViewModelProviders.of(this).get(StateViewModel.class);
+        stateViewModel.getData().observe(Objects.requireNonNull(getActivity()), data1 -> {
+            if (data1 != null) {
+                stateDatalist.clear();
+                stateDatalist.addAll(data1);
+            }
+        });
+
+
+        if (UtilMethod.checkLocationPermission(getContext())) {
+            mFusedLocationProviderClient.getLastLocation().addOnCompleteListener(
+                    new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            Location location = task.getResult();
+
+                            coordinates = new LatLng(location.getLatitude(), location.getLongitude());
+                            Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+                            List<Address> addresses = null;
+                            try {
+                                addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (addresses.size() > 0) {
+                                state = addresses.get(0).getAdminArea();
+                                Double count = 0.0;
+                                Double safety = 1.0;
+                                Double total = Double.valueOf(preferences.getString("india_cases", "1").replaceAll(",",""));
+                                for (int i=0; i<stateDatalist.size(); i++){
+                                    if (state.equals(stateDatalist.get(i).getStatename())){
+                                        count = Double.valueOf(stateDatalist.get(i).getCases());
+
+                                    }
+                                }
+
+                                if (count>0 && total>0){
+                                    safety = (count/total)*100;
+                                    Toast.makeText(getContext(), "Risk in your state : "+String.valueOf(safety).substring(0,5)+"%", Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+                            else {
+                                // do your stuff
+                            }
+
+                        }
+                    }
+            );
+        }
+
+
     }
 }

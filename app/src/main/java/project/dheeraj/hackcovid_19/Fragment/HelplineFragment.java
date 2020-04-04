@@ -2,64 +2,55 @@ package project.dheeraj.hackcovid_19.Fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import project.dheeraj.hackcovid_19.Adapter.HelplineAdapter;
+import project.dheeraj.hackcovid_19.Model.HelplineViewModel;
+import project.dheeraj.hackcovid_19.Model.StateData;
 import project.dheeraj.hackcovid_19.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HelplineFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HelplineFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ArrayList<StateData> headerDatalist = new ArrayList<>();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
-    public HelplineFragment() {
-        // Required empty public constructor
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        HelplineViewModel notificationsViewModel = ViewModelProviders.of(this).get(HelplineViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_helpline, container, false);
+        ButterKnife.bind(this, root);
+        progressBar.setVisibility(View.VISIBLE);
+        HelplineAdapter helplineAdapter = new HelplineAdapter(headerDatalist, getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(helplineAdapter);
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HelplineFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HelplineFragment newInstance(String param1, String param2) {
-        HelplineFragment fragment = new HelplineFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+        notificationsViewModel.getData().observe(Objects.requireNonNull(getActivity()), data1 -> {
+            if (data1 != null) {
+                headerDatalist.clear();
+                headerDatalist.addAll(data1);
+                helplineAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_helpline, container, false);
+        return root;
     }
 }

@@ -540,142 +540,141 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Situation (Global)"
-                        android:textSize="18dp"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/alata_regular"
                         android:layout_gravity="center"
-                        android:textColor="@android:color/black"/>
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alata_regular"
+                        android:text="Situation (Global)"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/buttonGlobal"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
                         android:padding="3dp"
                         android:src="@drawable/ic_next"
-                        android:layout_gravity="center"
-                        android:tint="@color/grey_500"
-                        android:layout_marginRight="5dp"/>
+                        android:tint="@color/grey_500" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="2dp">
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Cases"
-                        android:textSize="16dp"
-                        android:fontFamily="@font/alata_regular"
                         android:layout_gravity="center"
-                        android:textColor="@android:color/black"/>
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alata_regular"
+                        android:text="Cases"
+                        android:textColor="@android:color/black"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:id="@+id/textTotalCases"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Cases"
-                        android:textSize="16dp"
-                        android:textAlignment="textEnd"
-                        android:fontFamily="@font/alata_regular"
                         android:layout_gravity="center"
-                        android:textColor="@android:color/black"/>
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alata_regular"
+                        android:text="Cases"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/black"
+                        android:textSize="16dp" />
 
                 </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/progressTotalCases"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:progress="100"
-                    android:progressTint="@color/yellow_600"/>
+                    android:progressTint="@color/yellow_600" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="2dp">
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Deaths"
-                        android:textSize="16dp"
-                        android:fontFamily="@font/alata_regular"
                         android:layout_gravity="center"
-                        android:textColor="@android:color/black"/>
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alata_regular"
+                        android:text="Deaths"
+                        android:textColor="@android:color/black"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:id="@+id/textDeathCases"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Cases"
-                        android:textSize="16dp"
-                        android:textAlignment="textEnd"
-                        android:fontFamily="@font/alata_regular"
                         android:layout_gravity="center"
-                        android:textColor="@android:color/black"/>
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alata_regular"
+                        android:text="Cases"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/black"
+                        android:textSize="16dp" />
 
                 </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/progressDeathCases"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:progress="10"
                     android:progressBackgroundTint="@color/red_500"
-                    android:progressTint="@color/red_700"/>
+                    android:progressTint="@color/red_700" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="2dp">
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Recovered"
-                        android:textSize="16dp"
-                        android:fontFamily="@font/alata_regular"
                         android:layout_gravity="center"
-                        android:textColor="@android:color/black"/>
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alata_regular"
+                        android:text="Recovered"
+                        android:textColor="@android:color/black"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:id="@+id/textRecoveredCases"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Cases"
-                        android:textSize="16dp"
-                        android:textAlignment="textEnd"
-                        android:fontFamily="@font/alata_regular"
                         android:layout_gravity="center"
-                        android:textColor="@android:color/black"/>
+                        android:layout_weight="1"
+                        android:fontFamily="@font/alata_regular"
+                        android:text="Cases"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/black"
+                        android:textSize="16dp" />
 
                 </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/progressRecoveredCases"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:progress="20"
-                    android:progressTint="@color/green_700"
                     android:progressBackgroundTint="@color/green_500"
-                    />
+                    android:progressTint="@color/green_700" />
             </LinearLayout>
 
 
@@ -733,4 +732,22 @@
 
     </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+
+    <FrameLayout
+        android:id="@+id/dashProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

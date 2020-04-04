@@ -1,9 +1,9 @@
-package project.dheeraj.hackcovid_19;
+package project.dheeraj.hackcovid_19.Model;
 
-public class CountryLine implements Comparable<CountryLine>  {
+public class CountryModel implements Comparable<CountryModel>  {
 
     public String countryName, cases, recovered, deaths, newCases, newDeaths;
-    public CountryLine(String countryName, String cases, String newCases, String recovered, String deaths, String newDeaths) {
+    public CountryModel(String countryName, String cases, String newCases, String recovered, String deaths, String newDeaths) {
         super();
         this.countryName = countryName;
         this.cases = cases;
@@ -55,8 +55,8 @@ public class CountryLine implements Comparable<CountryLine>  {
     }
 
     @Override
-    public int compareTo(CountryLine countryLine) {
-        return Integer.parseInt(countryLine.getCases().replaceAll(",", ""))
+    public int compareTo(CountryModel countryModel) {
+        return Integer.parseInt(countryModel.getCases().replaceAll(",", ""))
                 - Integer.parseInt(this.cases.replaceAll(",", ""));
     }
 }

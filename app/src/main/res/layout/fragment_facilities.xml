@@ -35,6 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Name *"
+                android:inputType="textPersonName"
                 android:textSize="14dp"
                 android:textColor="@color/black_90"/>
 
@@ -49,6 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mobile Number *"
+                android:inputType="number"
+                android:maxLength="10"
                 android:textSize="14dp"
                 android:textColor="@color/black_90"/>
 
@@ -63,6 +66,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Aadhaar Number *"
+                android:inputType="number"
+                android:maxLength="12"
                 android:textSize="14dp"
                 android:textColor="@color/black_90"/>
 
@@ -73,6 +78,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Address *"
@@ -105,12 +111,14 @@
                 android:layout_height="wrap_content"
                 android:hint="Pin code *"
                 android:textSize="14dp"
+                android:inputType="number"
+                android:maxLength="6"
                 android:textColor="@color/black_90"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/etSubmit"
+            android:id="@+id/buttonSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/orange_500"
@@ -137,6 +145,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Aadhaar Number *"
                 android:textSize="14dp"
+                android:maxLength="12"
+                android:inputType="number"
                 android:textColor="@color/black_90"/>
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -148,6 +158,8 @@
             android:background="@color/green_500"
             android:layout_marginTop="20dp"
             android:text="Search User"
+            android:clickable="true"
+            android:focusable="true"
             android:textColor="@color/white"/>
 
 
@@ -165,7 +177,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -189,6 +202,17 @@
                 android:textSize="14dp"
                 android:text="Valid till July 30, 2020"
                 />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1.5"
+            >
 
             <TextView
                 android:id="@+id/textName"
@@ -243,6 +267,26 @@
                 android:layout_gravity="start"
                 android:textStyle="bold"
                 android:text="Pin Code"
+                android:layout_marginBottom="10dp"
+                />
+        </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imageQR"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/qr"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:text="Verified"
+                android:textColor="@color/green_500"
                 android:layout_marginBottom="20dp"
                 />
 

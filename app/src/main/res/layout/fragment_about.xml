@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_800">
+    android:background="@drawable/covid_navigation_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,6 +69,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Get number of infected patients in your area (5KM) on app startup"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get details of nearby shops in your city"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 

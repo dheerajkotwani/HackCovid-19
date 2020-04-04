@@ -38,8 +38,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Locale;
 
-import project.dheeraj.hackcovid_19.CountryLine;
-import project.dheeraj.hackcovid_19.ListCountriesAdapter;
+import project.dheeraj.hackcovid_19.Model.CountryModel;
+import project.dheeraj.hackcovid_19.Adapter.ListCountriesAdapter;
 import project.dheeraj.hackcovid_19.R;
 
 public class FragmentCountryView extends Fragment {
@@ -63,7 +63,7 @@ public class FragmentCountryView extends Fragment {
     DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
     ListView listViewCountries;
     ListCountriesAdapter listCountriesAdapter;
-    ArrayList<CountryLine> allCountriesResults, FilteredArrList;
+    ArrayList<CountryModel> allCountriesResults, FilteredArrList;
     Intent sharingIntent;
     int colNumCountry, colNumCases, colNumRecovered, colNumDeaths, colNumActive, colNumNewCases, colNumNewDeaths;
     SwipeRefreshLayout mySwipeRefreshLayout;
@@ -108,7 +108,7 @@ public class FragmentCountryView extends Fragment {
         myCalender = Calendar.getInstance();
         handler = new Handler() ;
         generalDecimalFormat = new DecimalFormat("0.00", symbols);
-        allCountriesResults = new ArrayList<CountryLine>();
+        allCountriesResults = new ArrayList<CountryModel>();
 
 
         // Implement Swipe to Refresh
@@ -169,7 +169,7 @@ public class FragmentCountryView extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence searchSequence, int start, int before, int count) {
-                FilteredArrList = new ArrayList<CountryLine>();
+                FilteredArrList = new ArrayList<CountryModel>();
                 if (searchSequence == null || searchSequence.length() == 0) {
                     // back to original
                     setListViewCountries(allCountriesResults);
@@ -178,7 +178,7 @@ public class FragmentCountryView extends Fragment {
                     for (int i = 0; i < allCountriesResults.size(); i++) {
                         String data = allCountriesResults.get(i).countryName;
                         if (data.toLowerCase().startsWith(searchSequence.toString())) {
-                            FilteredArrList.add(new CountryLine(
+                            FilteredArrList.add(new CountryModel(
                                     allCountriesResults.get(i).countryName,
                                     allCountriesResults.get(i).cases,
                                     allCountriesResults.get(i).newCases,
@@ -226,7 +226,7 @@ public class FragmentCountryView extends Fragment {
         return view;
     }
 
-    void setListViewCountries(ArrayList<CountryLine> allCountriesResults) {
+    void setListViewCountries(ArrayList<CountryModel> allCountriesResults) {
         Collections.sort(allCountriesResults);
         listCountriesAdapter = new ListCountriesAdapter(getActivity(), allCountriesResults);
         listViewCountries.setAdapter(listCountriesAdapter);
@@ -255,24 +255,19 @@ public class FragmentCountryView extends Fragment {
             @Override
             public void run() {
                 try {
-                    doc = null; // Fetches the HTML document
+                    doc = null;
                     doc = Jsoup.connect(url).timeout(10000).get();
-                    // table id main_table_countries
                     countriesTable = doc.select("table").get(0);
                     countriesRows = countriesTable.select("tr");
-                    //Log.e("TITLE", elementCases.text());
                     getActivity().runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
-                            // get countries
                             rowIterator = countriesRows.iterator();
-                            allCountriesResults = new ArrayList<CountryLine>();
+                            allCountriesResults = new ArrayList<CountryModel>();
 
-                            // read table header and find correct column number for each category
                             row = rowIterator.next();
                             cols = row.select("th");
-                            //Log.e("COLS: ", cols.text());
                             if (cols.get(0).text().contains("Country")) {
                                 for(int i=1; i < cols.size(); i++){
                                     if (cols.get(i).text().contains("Total") && cols.get(i).text().contains("Cases"))
@@ -338,7 +333,7 @@ public class FragmentCountryView extends Fragment {
                                 if (cols.get(colNumNewDeaths).hasText()) {tmpNewDeaths = cols.get(colNumNewDeaths).text();}
                                 else {tmpNewDeaths = "0";}
 
-                                allCountriesResults.add(new CountryLine(tmpCountry, tmpCases, tmpNewCases, tmpRecovered, tmpDeaths, tmpNewDeaths));
+                                allCountriesResults.add(new CountryModel(tmpCountry, tmpCases, tmpNewCases, tmpRecovered, tmpDeaths, tmpNewDeaths));
                             }
 
                             setListViewCountries(allCountriesResults);
@@ -354,9 +349,6 @@ public class FragmentCountryView extends Fragment {
                             editor.apply();
 
                             calculate_percentages();
-
-                            myCalender = Calendar.getInstance();
-                            textViewDate.setText("Last updated: " + myFormat.format(myCalender.getTime()));
                         }
                     });
                 }

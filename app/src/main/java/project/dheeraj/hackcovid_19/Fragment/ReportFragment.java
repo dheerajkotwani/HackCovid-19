@@ -103,7 +103,6 @@ public class ReportFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-//        getDeviceLocation();
 
         mMap.setBuildingsEnabled(true);
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {

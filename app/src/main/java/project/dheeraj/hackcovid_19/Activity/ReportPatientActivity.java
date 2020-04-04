@@ -128,8 +128,6 @@ public class ReportPatientActivity extends AppCompatActivity implements OnMapRea
                                     Toast.makeText(ReportPatientActivity.this, "failed "+task.getException(), Toast.LENGTH_SHORT).show();
                                     Log.d("TAG", "Current location is null. Using defaults.");
                                     Log.e("TAG", "Exception: %s", task.getException());
-//                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, DEFAULT_ZOOM));
-//                                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
                                 }
 
                             }
