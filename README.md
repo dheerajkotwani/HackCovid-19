@@ -65,6 +65,9 @@ Application is available here:
   </tr>
 </table>
 
+## To Setup the project properly add the following to local.properties under Gradle Scripts
+GOOGLE_MAP_KEY="Add your google map api key"
+
 
 ## License
 
