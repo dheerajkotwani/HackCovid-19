@@ -290,27 +290,29 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
     }
 
     void calculate_percentages () {
-        tmpNumber = Double.parseDouble(textViewRecovered.getText().toString().replaceAll(",", ""))
-                / Double.parseDouble(textViewCases.getText().toString().replaceAll(",", ""))
+
+
+        tmpNumber = Double.parseDouble(textRecovered.getText().toString().replaceAll(",", ""))
+                / Double.parseDouble(textTotalCases.getText().toString().replaceAll(",", ""))
                 * 100;
 
         progressRecovered.setProgress((int) tmpNumber);
 
-        textTotalCases.setText(textViewCases.getText().toString());
-        textRecovered.setText(textViewRecovered.getText().toString());
-        textDeaths.setText(textViewDeaths.getText().toString());
-        textViewRecoveredTitle.setText("Recovered   " + generalDecimalFormat.format(tmpNumber) + "%");
+//        textTotalCases.setText(textViewCases.getText().toString());
+//        textRecovered.setText(textViewRecovered.getText().toString());
+//        textDeaths.setText(textViewDeaths.getText().toString());
+//        textViewRecoveredTitle.setText("Recovered   " + generalDecimalFormat.format(tmpNumber) + "%");
 
-        tmpNumber = Double.parseDouble(textViewDeaths.getText().toString().replaceAll(",", ""))
-                / Double.parseDouble(textViewCases.getText().toString().replaceAll(",", ""))
+        tmpNumber = Double.parseDouble(textDeaths.getText().toString().replaceAll(",", ""))
+                / Double.parseDouble(textTotalCases.getText().toString().replaceAll(",", ""))
                 * 100 ;
-        textViewDeathsTitle.setText("Deaths   " + generalDecimalFormat.format(tmpNumber) + "%");
+//        textViewDeathsTitle.setText("Deaths   " + generalDecimalFormat.format(tmpNumber) + "%");
         progressDeaths.setProgress((int) tmpNumber);
 
-        tmpNumber = Double.parseDouble(textViewActive.getText().toString().replaceAll(",", ""))
-                / Double.parseDouble(textViewCases.getText().toString().replaceAll(",", ""))
-                * 100 ;
-        textViewActiveTitle.setText("Active   " + generalDecimalFormat.format(tmpNumber) + "%");
+//        tmpNumber = Double.parseDouble(textViewActive.getText().toString().replaceAll(",", ""))
+//                / Double.parseDouble(textViewCases.getText().toString().replaceAll(",", ""))
+//                * 100 ;
+//        textViewActiveTitle.setText("Active   " + generalDecimalFormat.format(tmpNumber) + "%");
     }
 
     void refreshData() {
@@ -319,6 +321,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
             @Override
             public void run() {
                 try {
+
+
+
                     doc = null; // Fetches the HTML document
                     doc = Jsoup.connect(url).timeout(10000).get();
                     // table id main_table_countries
@@ -340,7 +345,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                             cols = row.select("th");
                             //Log.e("COLS: ", cols.text());
                             if (cols.get(0).text().contains("Country")) {
-                                for(int i=1; i < cols.size(); i++){
+                                for(int i=0; i < cols.size(); i++){
                                     if (cols.get(i).text().contains("Total") && cols.get(i).text().contains("Cases"))
                                     {
                                         colNumCases = i; Log.e("Cases: ", cols.get(i).text());
@@ -384,6 +389,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
 
                                 if (cols.get(colNumRecovered).hasText()){
                                     tmpRecovered = cols.get(colNumRecovered).text();
+                                    if (!tmpRecovered.equals("N/A") && !tmpCases.equals("N/A"))
                                     tmpPercentage = (generalDecimalFormat.format(Double.parseDouble(tmpRecovered.replaceAll(",", ""))
                                             / Double.parseDouble(tmpCases.replaceAll(",", ""))
                                             * 100)) + "%";
@@ -413,16 +419,35 @@ public class DashboardFragment extends Fragment implements View.OnClickListener{
                             textSearchBox.setText(null);
                             textSearchBox.clearFocus();
 
-                            // save results
-                            editor.putString("textViewCases", textViewCases.getText().toString());
-                            editor.putString("textViewRecovered", textViewRecovered.getText().toString());
-                            editor.putString("textViewActive", textViewActive.getText().toString());
-                            editor.putString("textViewDeaths", textViewDeaths.getText().toString());
-                            editor.putString("textViewDate", textViewDate.getText().toString());
-                            editor.apply();
 
-                            calculate_percentages();
 
+
+
+                            for (int i=0; i<allCountriesResults.size(); i++){
+                                if (allCountriesResults.get(i).countryName.toLowerCase().trim().equals("world")){
+                                    textTotalCases.setText(allCountriesResults.get(i).getCases());
+                                    textRecovered.setText(allCountriesResults.get(i).getRecovered().split("\n")[0]);
+                                    textDeaths.setText(allCountriesResults.get(i).getDeaths().split("\n")[0]);
+//                                    Toast.makeText(getActivity(), allCountriesResults.get(i).getCases(), Toast.LENGTH_SHORT).show();
+
+                                    textViewCases.setText(allCountriesResults.get(i).getCases());
+                                    textViewRecovered.setText(allCountriesResults.get(i).getRecovered());
+                                    textViewActive.setText(allCountriesResults.get(i).getCases());
+                                    textViewDeaths.setText(allCountriesResults.get(i).getDeaths());
+
+                                    // save results
+                                    myCalender = Calendar.getInstance();
+                                    editor.putString("textViewCases", allCountriesResults.get(i).getCases());
+                                    editor.putString("textViewRecovered", allCountriesResults.get(i).getRecovered().split("\n")[0]);
+                                    editor.putString("textViewActive", textViewActive.getText().toString());
+                                    editor.putString("textViewDeaths", allCountriesResults.get(i).getDeaths().split("\n")[0]);
+                                    editor.putString("textViewDate", "Last updated: " + myFormat.format(myCalender.getTime()));
+                                    editor.apply();
+
+                                    calculate_percentages();
+                                    break;
+                                }
+                            }
                             myCalender = Calendar.getInstance();
                             textViewDate.setText("Last updated: " + myFormat.format(myCalender.getTime()));
                         }

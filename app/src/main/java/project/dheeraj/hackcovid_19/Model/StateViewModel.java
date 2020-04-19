@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import project.dheeraj.hackcovid_19.BuildConfig;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class StateViewModel extends AndroidViewModel {
@@ -47,7 +49,7 @@ public class StateViewModel extends AndroidViewModel {
     private void refreshData() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences("API", MODE_PRIVATE);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, sharedPreferences.getString("API", "http://ac41bf31.ngrok.io") + "/api/all", response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, sharedPreferences.getString("API", BuildConfig.STATE_API) + "/api/all", response -> {
             try {
                 JSONObject json = new JSONObject(response);
                 JSONArray jsonA = json.getJSONArray("all");

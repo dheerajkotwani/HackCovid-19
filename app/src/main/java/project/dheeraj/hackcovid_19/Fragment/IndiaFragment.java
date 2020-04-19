@@ -2,8 +2,10 @@ package project.dheeraj.hackcovid_19.Fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +26,9 @@ import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -53,6 +58,7 @@ public class IndiaFragment extends Fragment {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +78,7 @@ public class IndiaFragment extends Fragment {
 
         ButterKnife.bind(this, root);
         progressBar.setVisibility(View.VISIBLE);
+
         StateAdapter stateAdapter = new StateAdapter(stateDatalist, getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
@@ -81,6 +88,8 @@ public class IndiaFragment extends Fragment {
             if (data1 != null) {
                 stateDatalist.clear();
                 stateDatalist.addAll(data1);
+                stateDatalist.sort(new caseSorter());
+                Collections.reverse(stateDatalist);
                 stateAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
             }
@@ -88,6 +97,15 @@ public class IndiaFragment extends Fragment {
         return root;
 
 
+    }
+
+    private class caseSorter implements Comparator<StateData>
+    {
+
+        @Override
+        public int compare(StateData stateData, StateData t1) {
+            return Integer.valueOf(Integer.valueOf(stateData.getCases()).compareTo(Integer.valueOf(t1.getCases())));
+        }
     }
 
     private void setData(){

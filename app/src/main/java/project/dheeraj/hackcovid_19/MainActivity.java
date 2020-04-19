@@ -7,12 +7,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,12 +31,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -50,6 +64,7 @@ import project.dheeraj.hackcovid_19.Fragment.NearbyFragment;
 import project.dheeraj.hackcovid_19.Fragment.ReportFragment;
 import project.dheeraj.hackcovid_19.Fragment.SymptomsFragment;
 import project.dheeraj.hackcovid_19.Fragment.facilitiesfragment;
+import project.dheeraj.hackcovid_19.Model.MapModel;
 import project.dheeraj.hackcovid_19.Model.StateData;
 import project.dheeraj.hackcovid_19.Model.StateViewModel;
 import project.dheeraj.hackcovid_19.R;
@@ -83,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentManager fragmentManager;
     private DuoAdapter duoMenuAdapter;
 //    private View fragment;
+    private FirebaseAnalytics firebaseAnalytics;
+    private Calendar myCalender;
+    SimpleDateFormat myFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         db = FirebaseFirestore.getInstance();
+        firebaseAnalytics = FirebaseAnalytics.getInstance(MainActivity.this);
 
         toolbar = findViewById(R.id.toolbar);
         duoMenuView = findViewById(R.id.duoMenuView);
@@ -102,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
+        myFormat = new SimpleDateFormat("MMMM dd, yyyy, hh:mm:ss aaa", Locale.US);
+        myCalender = Calendar.getInstance();
 
         fragmentDashboard = new DashboardFragment();
         fragmentCountryView = new FragmentCountryView();
@@ -152,13 +173,85 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return capitalize(model);
+        }
+        return capitalize(manufacturer) + " " + model;
+    }
 
+    public String getPhoneName() {
+        BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
+        String deviceName = myDevice.getName();
+        return deviceName;
+    }
+
+    private static String capitalize(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        }
+        char[] arr = str.toCharArray();
+        boolean capitalizeNext = true;
+
+        StringBuilder phrase = new StringBuilder();
+        for (char c : arr) {
+            if (capitalizeNext && Character.isLetter(c)) {
+                phrase.append(Character.toUpperCase(c));
+                capitalizeNext = false;
+                continue;
+            } else if (Character.isWhitespace(c)) {
+                capitalizeNext = true;
+            }
+            phrase.append(c);
+        }
+
+        return phrase.toString();
+    }
 
     private void checkData(LatLng coordinates){
 
         final double[] lat1 = {coordinates.latitude};
         double lon1 = coordinates.longitude;
         double M_PI = 3.14;
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(coordinates.latitude, coordinates.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String cityName = addresses.get(0).getAddressLine(0);
+        String stateName = addresses.get(0).getAddressLine(1);
+        String countryName = addresses.get(0).getAddressLine(2);
+        String deviceName = getDeviceName();
+
+        Map<String, Object> details = new HashMap<>();
+        details.put("state", stateName);
+        details.put("city", cityName);
+        details.put("country",countryName);
+        details.put("time", myFormat.format(myCalender.getTime()));
+        details.put("phone", getPhoneName());
+
+        String dateStr = "04/05/2010";
+
+        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
+        Date dateObj = null;
+        try {
+            dateObj = curFormater.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat postFormater = new SimpleDateFormat("MMMM dd, yyyy");
+
+        String newDateStr = postFormater.format(dateObj);
+
+        db.collection("locations")
+                .document(newDateStr)
+                .collection(getDeviceName())
+                .add(details);
 
         db.collection("reports")
                 .whereEqualTo("verified", true)

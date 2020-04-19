@@ -585,6 +585,7 @@
                         android:fontFamily="@font/alata_regular"
                         android:text="Cases"
                         android:textAlignment="textEnd"
+                        android:singleLine="true"
                         android:textColor="@android:color/black"
                         android:textSize="16dp" />
 
@@ -619,6 +620,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:singleLine="true"
                         android:layout_weight="1"
                         android:fontFamily="@font/alata_regular"
                         android:text="Cases"
@@ -659,6 +661,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
+                        android:singleLine="true"
                         android:fontFamily="@font/alata_regular"
                         android:text="Cases"
                         android:textAlignment="textEnd"

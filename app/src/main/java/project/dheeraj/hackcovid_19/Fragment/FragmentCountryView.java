@@ -311,19 +311,21 @@ public class FragmentCountryView extends Fragment {
 
                                 if (cols.get(colNumRecovered).hasText()){
                                     tmpRecovered = cols.get(colNumRecovered).text();
-                                    tmpPercentage = (generalDecimalFormat.format(Double.parseDouble(tmpRecovered.replaceAll(",", ""))
-                                            / Double.parseDouble(tmpCases.replaceAll(",", ""))
-                                            * 100)) + "%";
-                                    tmpRecovered = tmpRecovered + "\n" + tmpPercentage;
+
+//                                    tmpPercentage = (generalDecimalFormat.format(Double.parseDouble(tmpRecovered.split("\n")[0].replaceAll(",", ""))
+//                                            / Double.parseDouble(tmpCases.replaceAll(",", ""))
+//                                            * 100)) + "%";
+//                                    tmpRecovered = tmpRecovered + "\n" + tmpPercentage;
                                 }
                                 else {tmpRecovered = "0";}
 
                                 if(cols.get(colNumDeaths).hasText()) {
                                     tmpDeaths = cols.get(colNumDeaths).text();
-                                    tmpPercentage = (generalDecimalFormat.format(Double.parseDouble(tmpDeaths.replaceAll(",", ""))
-                                            / Double.parseDouble(tmpCases.replaceAll(",", ""))
-                                            * 100)) + "%";
-                                    tmpDeaths = tmpDeaths + "\n" + tmpPercentage;
+
+//                                    tmpPercentage = (generalDecimalFormat.format(Double.parseDouble(tmpDeaths.split("\n")[0].replaceAll(",", ""))
+//                                            / Double.parseDouble(tmpCases.replaceAll(",", ""))
+//                                            * 100)) + "%";
+//                                    tmpDeaths = tmpDeaths + "\n" + tmpPercentage;
                                 }
                                 else {tmpDeaths = "0";}
 
@@ -341,12 +343,12 @@ public class FragmentCountryView extends Fragment {
                             textSearchBox.clearFocus();
 
                             // save results
-                            editor.putString("textViewCases", textViewCases.getText().toString());
-                            editor.putString("textViewRecovered", textViewRecovered.getText().toString());
-                            editor.putString("textViewActive", textViewActive.getText().toString());
-                            editor.putString("textViewDeaths", textViewDeaths.getText().toString());
-                            editor.putString("textViewDate", textViewDate.getText().toString());
-                            editor.apply();
+//                            editor.putString("textViewCases", textViewCases.getText().toString());
+//                            editor.putString("textViewRecovered", textViewRecovered.getText().toString());
+//                            editor.putString("textViewActive", textViewActive.getText().toString());
+//                            editor.putString("textViewDeaths", textViewDeaths.getText().toString());
+//                            editor.putString("textViewDate", textViewDate.getText().toString());
+//                            editor.apply();
 
                             calculate_percentages();
                         }

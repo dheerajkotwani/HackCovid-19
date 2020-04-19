@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Objects;
 
 
+import project.dheeraj.hackcovid_19.BuildConfig;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class HelplineViewModel extends AndroidViewModel {
@@ -47,7 +49,7 @@ public class HelplineViewModel extends AndroidViewModel {
         //predict and state => POST
         RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences("API", MODE_PRIVATE);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, sharedPreferences.getString("API", "http://ac41bf31.ngrok.io") + "/api/helpline", response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, sharedPreferences.getString("API", BuildConfig.STATE_API) + "/api/helpline", response -> {
             try {
                 JSONObject json = new JSONObject(response);
                 JSONArray jsonArray = json.getJSONArray("helpline");
