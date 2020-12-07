@@ -25,9 +25,9 @@
 
 Application is available here:
 
-<a href='https://bit.ly/hack-covid19-app'><img alt='Download app from Here' src='/Screenshots/icon/android_badge.png' height="80" width="160"/></a>
+<a href='https://bit.ly/hack-covid19-app'><img alt='Download app from Here' src='/Screenshots/icons/android_badge.png' height="80" width="160"/></a>
 
-<a href='https://www.youtube.com/watch?v=XB-zgNzJXQM'><img alt='See working funtionality of app' src='/Screenshots/icon/youtube_badge.svg' height="160" width="160"/></a>
+<a href='https://www.youtube.com/watch?v=XB-zgNzJXQM'><img alt='See working funtionality of app' src='https://yt3.ggpht.com/ytc/AAUvwnhEvcqvrxHv9WBTw0l43XAUoq2-uEf_VmXxNQDr-A=s900-c-k-c0x00ffffff-no-rj' height="160" width="160"/></a>
 
 
 ## Tech used
